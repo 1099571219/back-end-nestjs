@@ -7,15 +7,10 @@ import { createUserDto } from './createUserDto';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(':id')
+  @Get()
   getHello(@Param() params): string {
     console.log(params);
     return this.appService.getHello();
   }
-  @Post('addData')
-  @HttpCode(204)
-  addData(@Body() createUserDto:createUserDto){
-    console.log(createUserDto);
-    return this.appService.addData()
-  }
+  
 }
