@@ -9,7 +9,6 @@ export class AppController {
 
   @Get()
   getHello(@Param() params): string {
-    console.log(params);
     return this.appService.getHello();
   }
   

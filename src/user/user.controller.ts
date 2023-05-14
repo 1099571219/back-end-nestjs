@@ -1,6 +1,10 @@
 import { Users } from 'src/controller-test/controller-test.service'
 import { UserService } from './user.service'
-import { Body, Controller, Delete, HttpCode, HttpStatus, Post, Put, Res } from '@nestjs/common'
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Next, Param, ParseIntPipe, ParseUUIDPipe, Post, Put, Req, Res, UseFilters, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common'
+import { ValidationPipe } from 'src/common/ValidationPipe'
+import { RolesGuard } from 'src/common/roles.guard'
+import { Roles } from 'src/common/roles.decorator'
+import { LoggingInterceptor } from 'src/common/interceptor/loggin.interceptor'
 export interface UpdateData {
     username:Users['username'],
     updateData:Partial<Users>
@@ -22,4 +26,15 @@ export class UserController {
   deleteUser(@Body() userInfo: Users) {
     return this.UserService.deleteUser(userInfo)
    }
+   @Get('getAll')
+   @Roles('admin')
+   getAllUser(){
+    return this.UserService.getAll()
+   }
+   @Get('getUser:id')
+   getUser(@Param('id',ParseIntPipe) id:number){
+      return id
+   }
+
+   
 }

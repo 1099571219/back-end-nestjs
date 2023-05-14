@@ -1,4 +1,4 @@
-import { Injectable, Res } from '@nestjs/common'
+import { ForbiddenException, HttpCode, HttpException, HttpStatus, Injectable, Res } from '@nestjs/common'
 import { Users } from 'src/controller-test/controller-test.service'
 import mongoose from 'mongoose'
 import { UpdateData } from './user.controller'
@@ -16,8 +16,7 @@ export class UserService {
   async register(user: Users) {
     const res = await userModel.find({ username: user.username })
     if (res.length !== 0) {
-      console.log(res)
-      return `用户: ${user.username} 已存在，请登录！`
+      throw new HttpException(`用户: ${user.username} 已存在，请登录！`,HttpStatus.FORBIDDEN)
     } else {
       console.log(await userModel.insertMany(user))
       return `用户: ${user.username} 创建成功！`
@@ -38,5 +37,9 @@ export class UserService {
   }
   async deleteUser(user: Users) {
     return user
+  }
+
+  async getAll(){
+    return await userModel.find({})
   }
 }
