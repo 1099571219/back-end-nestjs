@@ -1,11 +1,12 @@
 import { Injectable, Res } from '@nestjs/common'
-import { IsInt, IsNumber, IsNumberString, IsString } from 'class-validator'
+import { IsInt, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
 import { MongoClient } from 'mongodb'
 
 export class Users {
-  @IsNumberString()
-  username: number
-
+  @IsOptional()
+  @IsString()
+  username: string
+  @IsOptional()
   @IsString()
   password: string
 }

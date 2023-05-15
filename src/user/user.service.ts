@@ -1,4 +1,12 @@
-import { ForbiddenException, HttpCode, HttpException, HttpStatus, Injectable, Res } from '@nestjs/common'
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Res,
+} from '@nestjs/common'
 import { Users } from 'src/controller-test/controller-test.service'
 import mongoose from 'mongoose'
 import { UpdateData } from './user.controller'
@@ -16,30 +24,29 @@ export class UserService {
   async register(user: Users) {
     const res = await userModel.find({ username: user.username })
     if (res.length !== 0) {
-      throw new HttpException(`用户: ${user.username} 已存在，请登录！`,HttpStatus.FORBIDDEN)
+      throw new HttpException(
+        `用户: ${user.username} 已存在，请登录！`,
+        HttpStatus.FORBIDDEN,
+      )
     } else {
       console.log(await userModel.insertMany(user))
       return `用户: ${user.username} 创建成功！`
     }
   }
   async update(updateData: UpdateData) {
-    console.log(updateData);
-    
-    try {
-      const res = await userModel.updateOne(
-        { username: updateData.username },
-        updateData.updateData,
-      )
-      return res
-    } catch (error) {
-      return error
-    }
+    const res = await userModel.findOneAndUpdate(
+      { username: updateData.username },
+      { $set: updateData.updateData })
+      if(!res){
+        throw new BadRequestException(`${updateData} 未找到`)
+      }
+    return res
   }
   async deleteUser(user: Users) {
     return user
   }
 
-  async getAll(){
+  async getAll() {
     return await userModel.find({})
   }
 }
