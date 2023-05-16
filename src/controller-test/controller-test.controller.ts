@@ -14,7 +14,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common'
-import { ControllerTestService, Users } from './controller-test.service'
+import { ControllerTestService, UsersDTO } from './controller-test.service'
 import { AnyFilesInterceptor } from '@nestjs/platform-express'
 import { CreateFormData } from './formDataDto'
 
@@ -49,7 +49,7 @@ export class ControllerTestController {
     return this.ControllerTestService.getFormData(createFormData)
   }
   @Post('addData')
-  addData(@Body() createUserDto:Users, @Res() res) {
+  addData(@Body() createUserDto:UsersDTO, @Res() res) {
     this.ControllerTestService.addData(createUserDto, res)
   }
   

@@ -8,7 +8,7 @@ import {
 } from 'class-validator'
 import { MongoClient } from 'mongodb'
 
-export class Users {
+export class UsersDTO {
   @IsString()
   readonly username: string
   @IsString()
@@ -30,7 +30,7 @@ export class ControllerTestService {
   getFormData(createUserDto) {
     return { msg: 'return getFormData', data: createUserDto }
   }
-  async addData(createUserDto: Users, res) {
+  async addData(createUserDto: UsersDTO, res) {
     model.connect()
     const db = model.db('test1')
     const collection = db.collection('users')

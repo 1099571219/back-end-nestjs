@@ -8,16 +8,17 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core'
 import { ValidationPipe } from './common/ValidationPipe'
 import { AllExceptionFilter } from './common/Allexception.filter'
 import { LoggingInterceptor } from './common/interceptor/loggin.interceptor'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ControllerTestModule, UserModule],
+  imports: [ControllerTestModule, UserModule, AuthModule],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: RolesGuard,
+    // },
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,

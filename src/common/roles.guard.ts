@@ -1,5 +1,5 @@
 import { UserService } from 'src/user/user.service'
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -7,7 +7,7 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
       console.log('执行守卫');
     const roles = this.reflector.get('roles', context.getHandler())
-    if (!roles) return true
+    if (!roles) throw new UnauthorizedException('No permissions')
     
     const request = context.switchToHttp().getRequest()
     const user = request.user
