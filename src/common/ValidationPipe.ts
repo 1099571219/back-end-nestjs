@@ -11,7 +11,8 @@ import { validate } from 'class-validator'
 export class ValidationPipe implements PipeTransform<any> {
   async transform(value: any, { metatype }: ArgumentMetadata) {
     console.log('执行管道验证')
-
+    console.log(value,metatype);
+    if(!value) throw new BadRequestException('value null')
     if (!metatype || !this.toValidate(metatype)) {
       return value
     }
@@ -23,12 +24,11 @@ export class ValidationPipe implements PipeTransform<any> {
     return value
   }
   private toValidate(metatype: Function): boolean {
+    
     const types: Function[] = [String, Boolean, Number, Array, Object]
     return !types.includes(metatype)
   }
   private errorCatch(err) {
-    console.log(err);
-    
     if (err.children.length !== 0) {
       this.errorCatch(err.children[0])
     }

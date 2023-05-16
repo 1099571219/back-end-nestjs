@@ -13,6 +13,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Req,
   Res,
   UseFilters,
@@ -24,17 +25,20 @@ import { ValidationPipe } from 'src/common/ValidationPipe'
 import { RolesGuard } from 'src/common/roles.guard'
 import { Roles } from 'src/common/roles.decorator'
 import { LoggingInterceptor } from 'src/common/interceptor/loggin.interceptor'
-import { IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { IsNumberString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { Type } from 'class-transformer'
-export class UpdateData {
-  @IsString()
-  username: Users['username']
 
+export class updatedData extends Users{
+  @IsOptional()
+  password
+}
+export class UpdateDataDTO extends updatedData{
   @IsObject()
   @ValidateNested()
-  @Type(() => Users)
-  updateData: Users
+  @Type(()=>updatedData)
+  updateData: updatedData
 }
+
 
 @Controller('user')
 export class UserController {
@@ -44,7 +48,7 @@ export class UserController {
     return this.UserService.register(userInfo)
   }
   @Put('update')
-  update(@Body() updateData: UpdateData) {
+  update(@Body() updateData: UpdateDataDTO) {
     return this.UserService.update(updateData)
   }
   @Delete('deleteUser')
@@ -56,8 +60,9 @@ export class UserController {
   getAllUser() {
     return this.UserService.getAll()
   }
-  @Get('getUser:id')
-  getUser(@Param('id', ParseIntPipe) id: number) {
-    return id
+  @Get('getUser')
+  getUser(@Query('username') username: Users['username']) {
+    return this.UserService.getUser(username)
   }
+  
 }

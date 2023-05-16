@@ -1,14 +1,18 @@
 import { Injectable, Res } from '@nestjs/common'
-import { IsInt, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
+import {
+  IsInt,
+  IsNumber,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { MongoClient } from 'mongodb'
 
 export class Users {
-  @IsOptional()
   @IsString()
-  username: string
-  @IsOptional()
+  readonly username: string
   @IsString()
-  password: string
+  readonly password: string
 }
 const model = new MongoClient('mongodb://127.0.0.1:27027')
 
