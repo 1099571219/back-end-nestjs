@@ -7,11 +7,13 @@ import { jwtContents } from "./jwt.contents";
 export class JwtStrategy extends PassportStrategy(Strategy){
     constructor(){
         super({
-            jwtFromRequest:ExtractJwt.fromHeader('token'),
+            jwtFromRequest:ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey:jwtContents.secret
         })
     }
     async validate(payload){
+        console.log(payload);
+        
         return {username:payload.username,id:payload.sub}
     }
 }
