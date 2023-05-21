@@ -1,15 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Req } from '@nestjs/common';
-import { AppService } from './app.service';
-import { Request } from 'express';
-import { createUserDto } from './createUserDto';
+import { AuthService } from './auth/auth.service';
+import { Controller ,Post,  Request, UseGuards } from '@nestjs/common';
+import { LocalAuthGuard } from './auth/local/LocalAuth.guard';
+import { Public } from './auth/SkipAuth';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(@Param() params): string {
-    return this.appService.getHello();
+  constructor(private readonly AuthService: AuthService) {}
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  login(@Request() req){
+    
+    return this.AuthService.login(req.user)
   }
-  
 }

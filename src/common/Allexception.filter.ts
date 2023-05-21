@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 import { BaseExceptionFilter } from '@nestjs/core'
+import { formDate } from 'src/utils/NowDate'
 
 @Catch()
 export class AllExceptionFilter extends BaseExceptionFilter {
@@ -21,12 +22,14 @@ export class AllExceptionFilter extends BaseExceptionFilter {
       status = exception.getStatus()
     } else { 
       ;[msg, status] = [
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        {httpStatus:HttpStatus.INTERNAL_SERVER_ERROR},
+        {httpStatus:HttpStatus.INTERNAL_SERVER_ERROR},
       ]
     }
+    msg['timestamp'] = formDate()
+    msg['path'] = request.url
     response
       .status(status)
-      .json({ status,msg, timestamp: new Date().toISOString(), path: request.url })
+      .json(msg)
   }
 }

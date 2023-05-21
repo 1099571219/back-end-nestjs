@@ -1,54 +1,45 @@
-import { UsersDTO } from 'src/controller-test/controller-test.service'
 import { UserService } from './user.service'
 import {
   Body,
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
-  Next,
-  Param,
-  ParseIntPipe,
-  ParseUUIDPipe,
   Post,
   Put,
   Query,
-  Req,
-  Res,
-  UseFilters,
+  Request,
   UseGuards,
-  UseInterceptors,
-  UsePipes,
 } from '@nestjs/common'
-import { ValidationPipe } from 'src/common/ValidationPipe'
-import { RolesGuard } from 'src/common/roles.guard'
-import { Roles } from 'src/common/roles.decorator'
-import { LoggingInterceptor } from 'src/common/interceptor/loggin.interceptor'
-import { IsNumberString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
+import {  IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { Type } from 'class-transformer'
-import { userInfo } from 'os'
-import { AuthGuard } from '@nestjs/passport'
+import { Role } from 'src/auth/role/role.enum'
+import { Roles } from 'src/auth/role/roles.decorator'
+import { RolesGuard } from 'src/auth/role/rolesAuth.guard'
+import { Public } from 'src/auth/SkipAuth'
+
+export class UsersDTO{
+  @IsString()
+  username:string
+  @IsString()
+  password:string
+}
 
 export class updatedData extends UsersDTO{
   @IsOptional()
   password
 }
-export class UpdateDataDTO extends updatedData{
+export class UpdateDataDTO extends UsersDTO{
   @IsObject()
   @ValidateNested()
   @Type(()=>updatedData)
   updateData: updatedData
 }
 
-
 @Controller('user')
 export class UserController {
   constructor(private UserService: UserService) {}
-  @Post('login')
-  login(@Body() userInfo:UsersDTO){
-    return this.UserService.login(userInfo)
-  }
+  
+  @Public()
   @Post('register')
   register(@Body() userInfo: UsersDTO) {
     return this.UserService.register(userInfo)
@@ -61,16 +52,13 @@ export class UserController {
   deleteUser(@Body() userInfo: UsersDTO) {
     return this.UserService.deleteUser(userInfo)
   }
-  @UseGuards(AuthGuard('jwt'))
+  @Public() 
   @Get('getAll')
-  getAllUser() {
+  getAllUser(@Request() req) {
     return this.UserService.getAll()
   }
   @Get('getUser')
   getUser(@Query('username') username: UsersDTO['username']) {
-    console.log(username);
-    
     return this.UserService.findUser(username)
   }
-  
 }
