@@ -6,9 +6,10 @@ export const UserSchema = new mongoose.Schema({
   password: { type: String },
   createTime: { type: String, default: formDate() },
   updateTime: { type: String, default: formDate() },
-  id: { type: Number, unique: true },
+  userId: { type: Number, unique: true },
   isAdmin: { type: Boolean, default: false },
-  role:{type:String,default:'user'}
-})
+  role: { type: String, default: 'user' },
+}) 
 
-UserSchema.index({ username: 1 });
+UserSchema.index({ username: 1})
+UserSchema.index({ userId: 1}) 

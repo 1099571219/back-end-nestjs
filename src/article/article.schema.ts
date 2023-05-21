@@ -9,4 +9,4 @@ export const articleSchema = new mongoose.Schema({
   createTime: { type: String, default: formDate() },
   updateTime: { type: String, default: formDate() },
 })
-articleSchema.index({ articleId: 1 })
+articleSchema.index({ articleId: 1 ,authorId:1})

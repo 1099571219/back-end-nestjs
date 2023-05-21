@@ -14,7 +14,7 @@ export class UserService {
     const userInfo = {
       username: user.username,
       password: user.password,
-      id: length,
+      userId: length,
     }
     try {
       await this.userModel.create(userInfo)
