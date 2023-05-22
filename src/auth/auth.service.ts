@@ -13,11 +13,11 @@ export class AuthService {
     
     const user = await this.UserService.findUser(username)
       
-    if (user && user[0].password === password) {
+    if (user.length!==0 && user[0].password === password) {
       const { password, ...result } = user[0]
       return result
     }
-    return null
+    return null 
   }
   async login(userInfo) {
     const user = userInfo._doc
