@@ -4,13 +4,16 @@ import { UsersDTO } from './user.controller'
 import { UpdateDataDTO } from './user.controller'
 import { InjectModel } from '@nestjs/mongoose'
 import { formDate } from 'src/utils/NowDate'
+import { Model } from 'mongoose'
+import { UserDocument } from './user.schema'
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('user') private userModel) {}
+  constructor(@InjectModel('user') private userModel:Model<UserDocument>) {}
 
   async register(user: UsersDTO) {
     const length = await this.userModel.find().count()
+    
     const userInfo = {
       username: user.username,
       password: user.password,
@@ -21,7 +24,7 @@ export class UserService {
     } catch (error) {
       throw new BadRequestException('用户名已存在')            
     }
-    return `用户: ${userInfo} 创建成功！`
+    return `用户: ${userInfo} 创建成功！` 
   }
   async update(updateData: UpdateDataDTO) {
     updateData.updateData['updateTime'] = formDate()
@@ -43,8 +46,12 @@ export class UserService {
   async getAll() {
     return await this.userModel.find()
   }
-  async findUser(username) {
-    const res = await this.userModel.findOne({ username })
-    return res
+  async findUser(username:UsersDTO['username']) {
+      const res = await this.userModel.find({ username })
+      if(res){
+        return res
+      }else{
+        return null
+      }
   }
 }
