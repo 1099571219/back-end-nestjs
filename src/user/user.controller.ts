@@ -10,7 +10,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common'
-import {  IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
+import {  IsNumber, IsNumberString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { Type } from 'class-transformer'
 import { Role } from 'src/auth/role/role.enum'
 import { Roles } from 'src/auth/role/roles.decorator'
@@ -34,6 +34,15 @@ export class UpdateDataDTO extends UsersDTO{
   @Type(()=>updatedData)
   updateData: updatedData
 }
+export class userDetailInfoDTO {
+  @IsOptional()
+  @IsString()
+  name:string
+
+  @IsOptional()
+  @IsNumber()
+  level:number
+}
 
 @Controller('user')
 export class UserController {
@@ -48,7 +57,9 @@ export class UserController {
   update(@Body() updateData: UpdateDataDTO) {
     return this.UserService.update(updateData)
   }
-  @Delete('deleteUser')
+  
+  @Roles(Role.Admin)
+  @Delete('delete')
   deleteUser(@Body() userInfo: UsersDTO) {
     return this.UserService.deleteUser(userInfo)
   }
@@ -61,4 +72,9 @@ export class UserController {
   getUser(@Query('username') username: UsersDTO['username']) {
     return this.UserService.findUser(username)
   }
+  @Post('updateUserInfo')
+  updateUserInfo(@Body() userInfo:userDetailInfoDTO,@Request() req){
+    return this.UserService.updateUserInfo(userInfo,req.user)
+  }
+
 }

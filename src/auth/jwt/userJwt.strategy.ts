@@ -15,12 +15,14 @@ export class JwtStrategy extends PassportStrategy(Strategy,'userJwt') {
         })
     }
     async validate(payload):Promise<userInfo>{
-        const [user] =await this.UserService.findUser(payload.username)
-        return {userId:user.userId,role:user.role}
+        // const [user] =await this.UserService.findUser(payload.username)
+        return {_id:payload.sub,userId:payload.userId,username:payload.username,role:payload.role,isAdmin:payload.isAdmin}
     }
-    
 }
 export interface userInfo{
+    _id:string,
     userId:number,
-    role:string
+    username:string,
+    role:string,
+    isAdmin:boolean,
 }

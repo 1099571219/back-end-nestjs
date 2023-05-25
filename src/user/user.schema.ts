@@ -1,3 +1,4 @@
+import { userInfo } from './../auth/jwt/userJwt.strategy'
 import { Prop } from '@nestjs/mongoose'
 import * as mongoose from 'mongoose'
 import { Document } from 'mongoose'
@@ -9,9 +10,20 @@ export interface UserDocument extends Document {
   password: string
   role: string
   isAdmin: boolean
+  userInfo: UserInfoDoc
   createTime: string
   updateTime: string
 }
+
+interface UserInfoDoc {
+  name: string
+  level: number
+}
+
+const UserInfoSchema = new mongoose.Schema({
+  name: { type: String, default: '新用户' },
+  level: { type: Number, default: 0 },
+})
 
 export const UserSchema = new mongoose.Schema({
   userId: { type: Number, unique: true, require: true },
@@ -19,6 +31,10 @@ export const UserSchema = new mongoose.Schema({
   password: { type: String, require: true },
   role: { type: String, default: 'user' },
   isAdmin: { type: Boolean, default: false },
+  userInfo: {
+    name: { type: String, default: '新用户' },
+    level: { type: Number, default: 0 },
+  },
   createTime: { type: String, default: formDate() },
   updateTime: { type: String, default: formDate() },
 })

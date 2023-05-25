@@ -1,6 +1,7 @@
+import { userInfo } from './../auth/jwt/userJwt.strategy';
 import { BadRequestException, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
-import { UsersDTO } from './user.controller'
+import { UsersDTO, userDetailInfoDTO } from './user.controller'
 import { UpdateDataDTO } from './user.controller'
 import { InjectModel } from '@nestjs/mongoose'
 import { formDate } from 'src/utils/NowDate'
@@ -53,5 +54,8 @@ export class UserService {
       }else{
         return null
       }
+  }
+  async updateUserInfo(userInfo:userDetailInfoDTO,user:userInfo){
+    return await this.userModel.updateOne({userId:user.userId},{$set:{userInfo}})
   }
 }

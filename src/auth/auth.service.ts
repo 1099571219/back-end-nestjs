@@ -20,9 +20,12 @@ export class AuthService {
     return null 
   }
   async login(userInfo) {
-    const user = userInfo._doc
+    const user = userInfo._doc as UserDocument
     const payload = {
-      username: user.username,
+      userId: user.userId,
+      username:user.username,
+      isAdmin:user.isAdmin,
+      role:user.role,
       sub: user._id,
     }
     
