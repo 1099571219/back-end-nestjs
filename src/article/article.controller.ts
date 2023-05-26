@@ -27,9 +27,6 @@ export class contentDTO {
   @IsNumber()
   readonly articleId: number
   @IsOptional()
-  @IsNumber()
-  readonly authorId: number
-  @IsOptional()
   @IsString()
   title: string
   @IsOptional()
@@ -68,7 +65,6 @@ export class ArticleController {
   @Public()
   @Get('getAll')
   getAll() {
-    console.log(1);
     
     return this.ArticleService.getAll()
   }

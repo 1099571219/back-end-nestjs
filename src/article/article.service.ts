@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { userInfo } from 'src/auth/jwt/userJwt.strategy'
 import { ArtDataDTO, contentDTO } from './article.controller'
 import { Model } from 'mongoose'
+import { formDate } from 'src/utils/NowDate'
 
 @Injectable()
 export class ArticleService {
@@ -15,7 +16,6 @@ export class ArticleService {
       authorId: user.userId,
       articleId: articleId,
     })
-    console.log(res)
     if (res == null) throw new UnauthorizedException('no power to do so')
     return res
   }
@@ -32,13 +32,15 @@ export class ArticleService {
     return await this.articleModel.create(art)
   }
   async update(content:contentDTO,user:userInfo){
-    return this.articleModel.updateOne({articleId:content.articleId},{$set:content})
-    const res = this.articleModel.updateOne({articleId:content.articleId,authorId:user.userId},{$set:content})
-    if(res===null)throw new UnauthorizedException('no power to do so')
+    if(user.isAdmin)return this.articleModel.updateOne({articleId:content.articleId},{$set:content})
+    const res = await this.articleModel.updateOne({articleId:content.articleId,authorId:user.userId},{$set:{...content,updateTime:formDate()}})
+    if(res.matchedCount===0)throw new UnauthorizedException('no power to do so')
     return res
   }
   getAll(listId?: number) {
-    return this.articleModel.find({}, { content: 0 }).sort({articleId:-1})
+    const res =this.articleModel.find({}, { content: 0 }).sort({articleId:-1})
+    
+    return res
   }
   getArtsByUserId(userId: number, userInfo: userInfo) {
     return this.articleModel.find({ userId: userId }).sort({articleId:-1})

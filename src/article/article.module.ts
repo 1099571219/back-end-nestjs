@@ -5,10 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { articleSchema } from './article.schema';
 
 @Module({
-  imports:[MongooseModule.forFeatureAsync([{name:'article',collection:'articles',useFactory:()=>{
+  imports:[MongooseModule.forFeatureAsync([{name:'article',collection:'articles',useFactory:(...arg)=>{
     const schema = articleSchema
-      schema.pre('save',function(){
-        console.log('pre save');
+      schema.pre('updateOne',function(){
+        console.log(arg);
+        console.log('update save');
       })
     return schema 
   }}])],

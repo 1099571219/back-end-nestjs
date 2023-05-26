@@ -13,16 +13,16 @@ export interface articleDocument extends Document {
 }
 
 export const articleSchema = new mongoose.Schema({
-  articleId: { type: Number, unique: true, require: true },
-  authorId: { type: Number, require: true },
-  title: { type: String, require: true },
+  articleId: { type: Number, unique: true, require: true ,immutable:true },
+  authorId: { type: Number, require: true,immutable:true },
+  title: { type: String, require: true }, 
   describe: { type: String, default: '暂无描述' },
-  content: { type: String, require: true },
-  isPublished: { type: Boolean, default: true },
-  createTime: { type: String, default: formDate() },
+  content: { type: String, require: true }, 
+  isPublished: { type: Boolean, default: true },  
+  createTime: { type: String, default: formDate() ,immutable:true},
   updateTime: { type: String, default: formDate() },
 })
 articleSchema.index({ articleId: 1 })
-articleSchema.index({ authorId: 1 })
+articleSchema.index({ authorId: 1 })  
 articleSchema.index({ title: 1 })
 articleSchema.index({ describe: 1 })
